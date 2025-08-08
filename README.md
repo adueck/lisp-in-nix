@@ -8,7 +8,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 
 ## Features
 
-- LISP-style polish notation
+- LISP-style syntax
 - Math primitives of `+` `*` and `-`
 - Integers only, no floats
 - Identifiers / variables
