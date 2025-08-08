@@ -3,10 +3,11 @@ let
   parseNumber = import ./parse-number.nix;
 
   parseElem = combs.bindParser
-    (combs.thenParser parseWhiteSpace parseElem')
+    (combs.thenParser parseWhiteSpace parseElemContent)
+    # TODO: could make a nicer abstraction for this like 'addOnAfter'
     (elem: combs.mapParser (_: elem) parseWhiteSpace);
 
-  parseElem' = combs.orParser [
+  parseElemContent = combs.orParser [
     parseSExpr
     parseOp
     parseNumber
