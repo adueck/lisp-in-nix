@@ -7,6 +7,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 - LISP-style polish notation
 - Math primitives of `+` `*` and `-`
 - Integers only, no floats
+- No variables or lambdas ... yet ?
 
 ## System Requirements
 
