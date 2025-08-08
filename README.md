@@ -22,10 +22,13 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 Edit `source.lisp`, to contain something one expression you want to evaluate, like:
 
 ```lisp
+; add the following things together
 (+
+    ; the product of 10 and 3
     (* 10 3)
-    5
-    (- 3 1 1))
+    5 ; the number 5
+    ; 3 minus 1 minus 1
+    (- 3 #| inline comment |# 1 1))
 ```
 
 Run `nix-instantiate --eval` to evaluate the source.
