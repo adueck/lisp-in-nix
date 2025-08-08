@@ -40,6 +40,14 @@ let
       body = f res.body;
     };
 
+  bindParser = parser: f: tokens: if (builtins.length tokens) == 0
+    then false
+    else let
+      res = parser tokens;
+    in if res == false
+      then false
+      else f res.body res.tokens;
+
   # bindParser = parser: f: res: tokens:
   #   let
   #     res = parser tokens;
@@ -50,6 +58,7 @@ in
 {
   orParser = orParser;
   thenParser = thenParser;
+  bindParser = bindParser;
   parseChar = parseChar;
   mapParser = mapParser;
 }

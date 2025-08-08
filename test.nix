@@ -1,3 +1,5 @@
+# TODO: also test for errors that should come up
+
 let 
   getTokens = import ./tokenizer/tokenizer.nix;
   parse = import ./parser/parse.nix;

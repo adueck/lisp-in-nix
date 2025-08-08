@@ -2,15 +2,9 @@ let
   combs = import ./combinators.nix;
   parseNumber = import ./parse-number.nix;
 
-  # TODO: to simplify this we need a bindParser combinator
-  parseElem = combs.thenParser parseWhiteSpace (tokens: let
-    res = parseElem' tokens;
-  in if res == false
-    then false
-    else {
-      tokens = (parseWhiteSpace res.tokens).tokens;
-      body = res.body;
-    });
+  parseElem = combs.bindParser
+    (combs.thenParser parseWhiteSpace parseElem')
+    (elem: combs.mapParser (_: elem) parseWhiteSpace);
 
   parseElem' = combs.orParser [
     parseSExpr
@@ -27,19 +21,21 @@ let
       (combs.parseChar "(")
       (parseSExpr' [ ]));
 
-  parseSExpr' = prev: tokens: let 
-    first = builtins.head tokens;
-    rest = builtins.tail tokens;
-  in if first == ")" then {
-    tokens = rest;
-    body = prev;
-  } else let
-    nextArg = parseElem tokens;
-  in if nextArg == false
+  parseSExpr' = prev: tokens: if (builtins.length tokens) == 0
     then false
-    else parseSExpr'
-      (builtins.concatLists [ prev [nextArg.body] ])
-      nextArg.tokens;
+    else let 
+      first = builtins.head tokens;
+      rest = builtins.tail tokens;
+    in if first == ")" then {
+      tokens = rest;
+      body = prev;
+    } else let
+      nextArg = parseElem tokens;
+    in if nextArg == false
+      then false
+      else parseSExpr'
+        (builtins.concatLists [ prev [nextArg.body] ])
+        nextArg.tokens;
 
   parseOp = combs.mapParser
     (x: {
