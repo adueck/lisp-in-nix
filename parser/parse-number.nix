@@ -1,6 +1,13 @@
 let
   parseNumber = prev: tokens: if (builtins.length tokens) == 0
-    then false
+    then if (builtins.length prev == 0) then false
+      else {
+        tokens = [ ];
+        body = {
+          type = "number";
+          value = digitsToNumber prev;
+        };
+      }
     else let
       first = builtins.head tokens;
       rest = builtins.tail tokens;
