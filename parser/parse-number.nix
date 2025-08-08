@@ -1,6 +1,8 @@
 let
   parseNumber = parseNumber' [ ];
 
+  # TODO: implement this with combinator combs.many parseDigit
+
   parseNumber' = prev: tokens: if (builtins.length tokens) == 0
     then if (builtins.length prev == 0) then false
       else {
