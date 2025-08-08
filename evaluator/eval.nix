@@ -67,7 +67,6 @@ let
         then false
         else env // { "${id.value}" = val; };
 
-
   add = env: args: if (builtins.length args) == 0
     then 0
     else let
@@ -100,5 +99,6 @@ let
     in if builtins.typeOf front != "int"
       then false
       else front * (multiply env rest);
+
 in
 eval

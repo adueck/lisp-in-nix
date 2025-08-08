@@ -51,7 +51,6 @@ let
       then false
       else f res.body res.tokens;
 
-  # TODO: implement thenParser purely based on bindParser ? 
   thenParser = parser: f: tokens: let
       res = parser tokens;
     in if res == false
