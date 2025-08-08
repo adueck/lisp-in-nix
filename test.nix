@@ -28,7 +28,7 @@ let
     }
     {
       input = ''; this is a comment
-      (+ 2 #| this is inline |# 3) ; that was cool
+      (+ 2 #| this is inline |# 3) ;;;; that was cool
     ;goodbye'';
       output = 5;
     }
