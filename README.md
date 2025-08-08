@@ -41,7 +41,7 @@ $ nix-instantiate --eval
 
 ## Developing
 
-Mash things around in the wild, scary world of dynamically-typed Nix and see if `source.lisp` evaluates or the tests pass.
+Mash things around in the wild, scary world of dynamically-typed Nix and see if `source.lisp` evaluates or the tests pass. Use the [nil](https://github.com/oxalica/nil) language server for a degree of sanity.
 
 ## Testing
 
