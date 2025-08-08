@@ -40,7 +40,7 @@ let
     else if (builtins.length ast.tokens != 0)
     then { passed = false; error = "trailing tokens"; input = test.input; }
     else let
-      result = eval ast.body;
+      result = eval {} ast.body;
     in if (result != test.output)
       then { passed = false; error = "incorrect evaluation"; input = test.input; }
       else { passed = true; };

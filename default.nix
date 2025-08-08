@@ -9,7 +9,7 @@ if (ast == false)
   then "SYNTAX ERROR: invalid expression"
   else if (builtins.length ast.tokens) == 0
     then let
-      res = eval ast.body;
+      res = eval {} ast.body;
     in if res == false
       then "ERROR: invalid expression"
       else res
