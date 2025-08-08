@@ -1,5 +1,7 @@
 let
-  parseNumber = prev: tokens: if (builtins.length tokens) == 0
+  parseNumber = parseNumber' [ ];
+
+  parseNumber' = prev: tokens: if (builtins.length tokens) == 0
     then if (builtins.length prev == 0) then false
       else {
         tokens = [ ];
@@ -24,7 +26,7 @@ let
               value = digitsToNumber prev;
             };
           }
-      else parseNumber (builtins.concatLists [prev [digit]]) rest;
+      else parseNumber' (builtins.concatLists [prev [digit]]) rest;
 
   digitsToNumber = digits: if (builtins.length digits) == 0
     then 0

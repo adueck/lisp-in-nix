@@ -1,4 +1,5 @@
 let
+  combinators = import ./combinators.nix;
   parseNumber = import ./parse-number.nix;
 
   parseElem = tokens: let
@@ -10,19 +11,12 @@ let
       body = res.body;
     };
 
-  parseElem' = tokens: if (builtins.length tokens) == 0
-    then false
-    else let
-      sExpr = parseSExpr tokens;
-    in if sExpr == false
-    then
-      let
-        op = parseOp tokens;
-      in if op == false
-        then parseNumber [ ] tokens
-        else op
-    else sExpr;
-  
+  parseElem' = combinators.orParser [
+    parseSExpr
+    parseOp
+    parseNumber
+  ];
+ 
   parseSExpr = tokens: let
     first = builtins.head tokens;
     rest = builtins.tail tokens;
