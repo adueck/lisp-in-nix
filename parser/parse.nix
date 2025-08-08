@@ -11,7 +11,19 @@ let
     parseOp
     parseNumber
   ];
- 
+
+  # TODO: this is not quite working with the combs.many parseElem
+  # parseSExpr = combs.bindParser
+  #   (combs.mapParser
+  #     (x: {
+  #       type = "s-expr";
+  #       value = x;
+  #     })
+  #     (combs.thenParser
+  #       (combs.parseChar "(")
+  #       (combs.many parseElem)))
+  #   (s: combs.mapParser (_: s) (combs.parseChar ")"));
+
   parseSExpr = combs.mapParser
     (x: {
       type = "s-expr";
@@ -48,14 +60,11 @@ let
       (combs.parseChar "*")
     ]);
   
-  parseWhiteSpace = tokens: if (builtins.length tokens) == 0
-    then { body = true; tokens = tokens; }
-    else let
-      first = builtins.head tokens;
-    in if isWhiteSpace first
-      then parseWhiteSpace (builtins.tail tokens)
-      else { body = true; tokens = tokens; };
-  
-  isWhiteSpace = s: s == " " || s == "\t" || s == "\n";  
+  parseWhiteSpace = combs.many (combs.orParser [
+    (combs.parseChar " ")
+    (combs.parseChar "\t")
+    (combs.parseChar "\n")
+  ]);
+
 in
 parseElem

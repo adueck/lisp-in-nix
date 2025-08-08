@@ -33,21 +33,31 @@ let
       body = f res.body;
     };
 
-  bindParser = parser: f: tokens: if (builtins.length tokens) == 0
-    then false
-    else let
+  bindParser = parser: f: tokens: let
       res = parser tokens;
     in if res == false
       then false
       else f res.body res.tokens;
 
   # TODO: implement thenParser purely based on bindParser ? 
-  thenParser = parser: f: tokens:
-    let
+  thenParser = parser: f: tokens: let
       res = parser tokens;
     in if res == false
       then false
       else f res.tokens;
+
+  many = parser: tokens:
+    many' [ ] parser tokens;
+
+  many' = acc: parser: tokens:
+    let
+      res = parser tokens;
+    in if res == false
+      then {
+        tokens = tokens;
+        body = acc;
+      }
+      else many' (builtins.concatLists [ res.body ] acc) parser res.tokens;
 
 in
 {
@@ -56,4 +66,5 @@ in
   bindParser = bindParser;
   parseChar = parseChar;
   mapParser = mapParser;
+  many = many;
 }
