@@ -1,6 +1,6 @@
 # LISP in Nix
 
-![Testing](https://github.com/adueck/lisp-in-nix/actions/workflows/testing.yml/badge.svg)
+![Testing](https://github.com/adueck/lisp-in-nix/actions/workflows/testing.yaml/badge.svg)
 
 I wanted to learn the Nix language. I heard that that Nix was Turing-complete, so I wrote a little LISP-style calculator in it. This is written done purely in this language people use for configuration, using only [builtins](https://nix.dev/manual/nix/2.18/language/builtins). **Can YAML do that? I didn't think so.**
 
@@ -31,4 +31,10 @@ Run `nix-instantiate --eval` to evaluate the source.
 ```bash
 $ nix-instantiate --eval
 36
+```
+
+## Testing
+
+```bash
+$ nix-instantiate --eval test.nix
 ```
