@@ -1,4 +1,4 @@
-let
+let 
   alternative = parsers: tokens:
     if (builtins.length tokens == 0) || (builtins.length parsers) == 0
       then false
