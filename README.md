@@ -14,7 +14,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 
 ## Running the calculator
 
-Edit `source.lisp`, to contain something you want to evaluate, like:
+Edit `source.lisp`, to contain something one expression you want to evaluate, like:
 
 ```lisp
 (+
