@@ -36,6 +36,11 @@ let
       input = "(let #| assignments here |# (+ 1 2)) ; to be implemented!!";
       output = 999;
     }
+    # undeclared identifier
+    {
+      input = "myVar_starts-with-LOWERCASE1of3StUfF";
+      output = false;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);

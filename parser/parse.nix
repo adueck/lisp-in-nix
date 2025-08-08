@@ -66,7 +66,7 @@ let
       builtins.concatLists
       (combs.successive
         [
-          (combs.some (combs.charRange "a" "c"))
+          (combs.some (combs.charRange "a" "z"))
           (combs.many (combs.alternative [
             (combs.charRange "0" "z")
             (combs.char "-")

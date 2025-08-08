@@ -10,7 +10,11 @@ let
     else evalSExpr env ast.value;
 
   lookup = env: id:
-    "will lookup identifier: ${id}";
+    let
+      ok = builtins.hasAttr id env;
+    in if ok then
+      builtins.getAttr id env
+      else false;
 
   evalSExpr = env: s: if (builtins.length s) == 0
     then false
