@@ -85,7 +85,7 @@ let
         body = true;
       };
   
-  # takes a list of parsers THAT PARSE AND RETURN CHARS/STRINGS
+  # takes a list of parsers THAT PARSE AND RETURN STRINGS
   successive = parsers: tokens:
     successive' "" parsers tokens;
 
