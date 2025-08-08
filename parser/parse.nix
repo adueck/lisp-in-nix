@@ -36,7 +36,8 @@ let
 
   # TODO
   # parseIdentifier = ...
-  
+  #   use < > comparisons to check if chars are in range a-z
+
   parseWhiteSpace = combs.many (combs.alternative [
     (combs.char " ")
     (combs.char "\t")

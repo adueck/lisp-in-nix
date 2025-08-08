@@ -3,6 +3,7 @@ let
     then ast.value
     else if ast.type == "op"
     then "operation: ${ast.value}"
+    # TODO: eval identifier by looking up in table
     else evalSExpr env ast.value;
 
   evalSExpr = env: s: if (builtins.length s) == 0
@@ -24,6 +25,7 @@ let
       then false
       else f env args;
 
+  # TODO: implement this once we get identifiers parsed
   doLet = env: args: 999;
 
   add = env: args: if (builtins.length args) == 0
