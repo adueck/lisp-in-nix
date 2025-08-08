@@ -39,6 +39,10 @@ $ nix-instantiate --eval
 30
 ```
 
+## Developing
+
+Mash things around in the wild, scary world of dynamically-typed Nix and see if `source.lisp` evaluates or the tests pass.
+
 ## Testing
 
 ```bash
