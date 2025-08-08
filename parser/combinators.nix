@@ -85,12 +85,16 @@ let
         body = true;
       };
   
+  # takes a list of parsers THAT PARSE AND RETURN CHARS/STRINGS
   successive = parsers: tokens:
+    successive' "" parsers tokens;
+
+  successive' = acc: parsers: tokens:
     if (builtins.length tokens == 0) && (builtins.length parsers != 0)
       then false
     else if (builtins.length parsers == 0)
       then {
-        body = true;
+        body = acc;
         inherit tokens;
       }
     else let
@@ -99,7 +103,7 @@ let
       res = firstP tokens;
     in if res == false
       then false
-      else successive restP res.tokens;
+      else successive' (acc + res.body) restP res.tokens;
 
 in
 {

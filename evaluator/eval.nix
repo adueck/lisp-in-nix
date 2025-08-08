@@ -18,10 +18,13 @@ let
     f = if (op == "+") then add
       else if (op == "*") then multiply
       else if (op == "-") then subtract
+      else if (op == "let") then doLet
       else false;
     in if f == false
       then false
       else f env args;
+
+  doLet = env: args: 999;
 
   add = env: args: if (builtins.length args) == 0
     then 0

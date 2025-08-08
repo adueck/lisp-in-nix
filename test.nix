@@ -32,6 +32,10 @@ let
     ;goodbye'';
       output = 5;
     }
+    {
+      input = "(let #| assignments here |# (+ 1 2)) ; to be implemented!!";
+      output = 999;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);

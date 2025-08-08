@@ -27,7 +27,15 @@ let
       (combs.char "+")
       (combs.char "-")
       (combs.char "*")
+      (combs.successive [
+        (combs.char "l")
+        (combs.char "e")
+        (combs.char "t")
+      ])
     ]);
+
+  # TODO
+  # parseIdentifier = ...
   
   parseWhiteSpace = combs.many (combs.alternative [
     (combs.char " ")
