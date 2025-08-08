@@ -18,11 +18,20 @@ let
     { input = "(*)"; output = 1; }
     { input = "(* 20)"; output = 20; }
     { input = "(* 5 10 2)"; output = 100; }
-    { input = ''
-      (+ 10
-        (  * 2   3)
-        (-3))
-    ''; output = 13; }
+    { 
+      input = ''
+        (+ 10
+          (  * 2   3)
+          (-3))
+      '';
+      output = 13;
+    }
+    {
+      input = ''; this is a comment
+      (+ 2 #| this is inline |# 3) ; that was cool
+    ;goodbye'';
+      output = 5;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);

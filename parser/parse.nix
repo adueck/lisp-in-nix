@@ -19,9 +19,9 @@ let
       (combs.many parseElem));
   
   parseOp = combs.mapParser
-    (x: {
+    (value: {
       type = "op";
-      value = x;
+      inherit value;
     })
     (combs.alternative [
       (combs.char "+")
@@ -33,8 +33,16 @@ let
     (combs.char " ")
     (combs.char "\t")
     (combs.char "\n")
-    (combs.char "eof")
+    parseComment
   ]);
+
+  parseComment = combs.alternative [
+    (combs.everythingBetween
+      (combs.char ";") (combs.char "\n"))
+    (combs.everythingBetween
+      (combs.successive [(combs.char "#") (combs.char "|")])
+      (combs.successive [(combs.char "|") (combs.char "#")]))
+  ];
 
 in
 parseElem

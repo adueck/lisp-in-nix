@@ -70,6 +70,37 @@ let
         (_: val)
         right);
 
+  everythingBetween = left: right: 
+    (thenParser left (throwAwayTill right));
+
+  throwAwayTill = closer: tokens:
+    if (builtins.length tokens == 0)
+      then false
+    else let
+      res = closer tokens;
+    in if res == false
+      then throwAwayTill closer (builtins.tail tokens)
+      else {
+        tokens = res.tokens;
+        body = true;
+      };
+  
+  successive = parsers: tokens:
+    if (builtins.length tokens == 0) && (builtins.length parsers != 0)
+      then false
+    else if (builtins.length parsers == 0)
+      then {
+        body = true;
+        inherit tokens;
+      }
+    else let
+      firstP = builtins.head parsers;
+      restP = builtins.tail parsers;
+      res = firstP tokens;
+    in if res == false
+      then false
+      else successive restP res.tokens;
+
 in
 {
   inherit
@@ -79,5 +110,7 @@ in
     bindParser
     thenParser
     many
-    between;
+    between
+    everythingBetween
+    successive;
 }
