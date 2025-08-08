@@ -53,11 +53,14 @@ let
     let
       res = parser tokens;
     in if res == false
-      then {
+      then { 
         tokens = tokens;
         body = acc;
       }
-      else many' (builtins.concatLists [[ res.body ] acc]) parser res.tokens;
+      else many'
+        (builtins.concatLists [ acc [ res.body ] ])
+        parser
+        res.tokens;
 
 in
 {
