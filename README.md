@@ -14,7 +14,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 - Identifiers / variables
 - No lambdas ... yet ?
 
-## System Requirements
+## Requirements
 
 - Nix
 
