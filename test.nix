@@ -33,8 +33,13 @@ let
       output = 5;
     }
     {
-      input = "(let #| assignments here |# (+ 1 2)) ; to be implemented!!";
-      output = 999;
+      input = "(let ((x 10) (y (+ 2 3))) (+ x y))";
+      output = 15;
+    }
+    {
+      input = ''(let ((foo 1) (bar 10))
+      (let ((baz 2)) (* (+ foo baz) bar)))'';
+      output = 30;
     }
     # undeclared identifier
     {

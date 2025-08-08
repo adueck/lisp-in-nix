@@ -11,7 +11,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 - LISP-style polish notation
 - Math primitives of `+` `*` and `-`
 - Integers only, no floats
-- let statments and identifiers 🚧 IN PROGRESS 🚧
+- Identifiers / variables
 - No lambdas ... yet ?
 
 ## System Requirements
@@ -23,20 +23,20 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 Edit `source.lisp`, to contain something one expression you want to evaluate, like:
 
 ```lisp
-; add the following things together
-(+
-    ; the product of 10 and 3
-    (* 10 3)
-    5 ; the number 5
-    ; 3 minus 1 minus 1
-    (- 3 #| inline comment |# 1 1))
+; basic LISP syntax for calculations
+(let
+  ; declare variables
+  ((x 1) (y 2))
+  (* 
+    (+ x y #| inline comments too |# )
+    10))
 ```
 
 Run `nix-instantiate --eval` to evaluate the source.
 
 ```bash
 $ nix-instantiate --eval
-36
+30
 ```
 
 ## Testing

@@ -35,8 +35,38 @@ let
       then false
       else f env args;
 
-  # TODO: implement this once we get identifiers parsed
-  doLet = env: args: 999;
+  doLet = env: args: if (builtins.length args) != 2
+    then false
+    else let
+      dec = builtins.head args;
+      body = builtins.head (builtins.tail args);
+    in let
+      newEnv = addDeclaration env dec;
+    in if newEnv == false
+      then false
+      else eval newEnv body;
+
+  addDeclaration = env: dec: if (dec.type != "s-expr")
+    then false
+    else builtins.foldl' (acc: curr: 
+      if acc == false
+        then false
+        else addOneDec acc curr
+    ) env dec.value;
+
+  addOneDec = env: dec: if (dec.type != "s-expr") || (builtins.length dec.value) != 2
+    then false
+    else let
+      id = builtins.head dec.value;
+      assigned = builtins.head (builtins.tail dec.value);
+    in if id.type != "identifier"
+      then false
+      else let
+        val = eval env assigned;
+      in if val == false
+        then false
+        else env // { "${id.value}" = val; };
+
 
   add = env: args: if (builtins.length args) == 0
     then 0
