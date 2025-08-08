@@ -10,5 +10,11 @@ let
         if result == false
           then orParser rest tokens
           else result;
+  thenParser = parser: f: tokens:
+    let
+      res = parser tokens;
+    in if res == false
+      then false
+      else f res.tokens;
 in
-{ orParser = orParser; }
+{ orParser = orParser; thenParser = thenParser; }

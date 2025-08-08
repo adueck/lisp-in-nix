@@ -2,27 +2,37 @@ let
   combinators = import ./combinators.nix;
   parseNumber = import ./parse-number.nix;
 
-  parseElem = tokens: let
-    res = parseElem' (eatWhiteSpace tokens);
+  # TODO: to simplify this we need a bindParser combinator
+  parseElem = combinators.thenParser eatWhiteSpace (tokens: let
+    res = parseElem' tokens;
   in if res == false
     then false
     else {
-      tokens = eatWhiteSpace res.tokens;
+      tokens = (eatWhiteSpace res.tokens).tokens;
       body = res.body;
-    };
+    });
 
   parseElem' = combinators.orParser [
     parseSExpr
     parseOp
     parseNumber
   ];
+
+  parseBracketStart = tokens: if (builtins.length tokens) == 0
+    then false
+    else let
+      first = builtins.head tokens;
+      rest = builtins.tail tokens;
+    in if first == "("
+      then {
+        body = true;
+        tokens = rest;
+      }
+      else false;
  
-  parseSExpr = tokens: let
-    first = builtins.head tokens;
-    rest = builtins.tail tokens;
-  in if first == "("
-    then let
-      args = parseSExpr' [ ] rest;
+  parseSExpr = combinators.thenParser parseBracketStart (tokens:
+    let
+      args = parseSExpr' [ ] tokens;
     in if args == false
       then false
       else {
@@ -31,16 +41,15 @@ let
           type = "s-expr";
           value = args.body; 
         };
-      }
-    else false;
+      });
 
   eatWhiteSpace = tokens: if (builtins.length tokens) == 0
-    then tokens
+    then { body = true; tokens = tokens; }
     else let
       first = builtins.head tokens;
     in if isWhiteSpace first
       then eatWhiteSpace (builtins.tail tokens)
-      else tokens;
+      else { body = true; tokens = tokens; };
 
   parseSExpr' = prev: tokens: let 
     first = builtins.head tokens;

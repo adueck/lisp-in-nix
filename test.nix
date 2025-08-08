@@ -3,7 +3,7 @@ let
   parse = import ./parser/parse.nix;
   eval = import ./evaluator/eval.nix;
   tests = [
-    { input = "3"; output = 3; }
+    { input = " 3 "; output = 3; }
     { input = "27345"; output = 27345; }
     { input = "(+ 1 2)"; output = 3; }
     { input = "(+)"; output = 0; }
@@ -24,9 +24,9 @@ let
   runTest = test: let
     ast = parse (getTokens test.input);
   in if (ast == false)
-    then { passed = false; error = "invalid syntax"; }
+    then { passed = false; error = "invalid syntax"; input = test.input; }
     else if (builtins.length ast.tokens != 0)
-    then { passed = false; error = "trailing tokens"; }
+    then { passed = false; error = "trailing tokens"; input = test.input; }
     else let
       result = eval ast.body;
     in if (result != test.output)
