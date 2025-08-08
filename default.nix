@@ -2,7 +2,7 @@ let
   getTokens = import ./tokenizer/tokenizer.nix;
   parse = import ./parser/parse.nix;
   eval = import ./evaluator/eval.nix;
-  ast = parse (getTokens ./source.lisp);
+  ast = parse (getTokens (builtins.readFile ./source.lisp));
 in
 
 if (ast == false)

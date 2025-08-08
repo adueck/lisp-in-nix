@@ -1,4 +1,4 @@
-name: "CI"
+name: "Testing"
 on:
   push:
     branches:
@@ -11,4 +11,4 @@ jobs:
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-stable
-    - run: nix-instantiate --eval
+    - run: nix-instantiate --eval test.nix
