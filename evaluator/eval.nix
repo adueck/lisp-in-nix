@@ -1,10 +1,16 @@
-let 
+let
+  # TODO: could re-work things to allow operations to be stored to variables!
+
   eval = env: ast: if ast.type == "number"
     then ast.value
     else if ast.type == "op"
     then "operation: ${ast.value}"
-    # TODO: eval identifier by looking up in table
+    else if ast.type == "identifier"
+    then lookup env ast.value 
     else evalSExpr env ast.value;
+
+  lookup = env: id:
+    "will lookup identifier: ${id}";
 
   evalSExpr = env: s: if (builtins.length s) == 0
     then false

@@ -23,6 +23,18 @@ let
       }
       else false;
 
+  charRange = low: high: tokens: if (builtins.length tokens) == 0
+    then false
+    else let
+      first = builtins.head tokens;
+      rest = builtins.tail tokens;
+    in if first >= low && first <= high
+      then {
+        body = first;
+        tokens = rest;
+      }
+      else false;
+
   mapParser = f: p: tokens:
     let
       res = p tokens;
@@ -62,6 +74,13 @@ let
         parser
         res.tokens;
 
+  some = parser: tokens:
+    let
+      res = many parser tokens;
+    in if (builtins.length res.body == 0)
+      then false
+      else res;
+
   between = left: right: middle: 
     bindParser
       (thenParser left middle)
@@ -85,9 +104,8 @@ let
         body = true;
       };
   
-  # takes a list of parsers THAT PARSE AND RETURN STRINGS
   successive = parsers: tokens:
-    successive' "" parsers tokens;
+    successive' [] parsers tokens;
 
   successive' = acc: parsers: tokens:
     if (builtins.length tokens == 0) && (builtins.length parsers != 0)
@@ -103,17 +121,19 @@ let
       res = firstP tokens;
     in if res == false
       then false
-      else successive' (acc + res.body) restP res.tokens;
+      else successive' (builtins.concatLists [acc [res.body]]) restP res.tokens;
 
 in
 {
   inherit
     alternative
     char
+    charRange
     mapParser
     bindParser
     thenParser
     many
+    some
     between
     everythingBetween
     successive;

@@ -9,6 +9,7 @@ let
   parseElemContent = combs.alternative [
     parseSExpr
     parseOp
+    parseIdentifier
     parseNumber
   ];
   
@@ -27,11 +28,14 @@ let
       (combs.char "+")
       (combs.char "-")
       (combs.char "*")
-      (combs.successive [
-        (combs.char "l")
-        (combs.char "e")
-        (combs.char "t")
-      ])
+      (combs.mapParser
+        combineChars 
+        (combs.successive [
+          (combs.char "l")
+          (combs.char "e")
+          (combs.char "t")
+        ])
+      )
     ]);
 
   # TODO
@@ -52,6 +56,30 @@ let
       (combs.successive [(combs.char "#") (combs.char "|")])
       (combs.successive [(combs.char "|") (combs.char "#")]))
   ];
+
+  parseIdentifier = combs.mapParser
+    (value: {
+      type = "identifier";
+      value = combineChars value;
+    })
+    (combs.mapParser
+      builtins.concatLists
+      (combs.successive
+        [
+          (combs.some (combs.charRange "a" "c"))
+          (combs.many (combs.alternative [
+            (combs.charRange "0" "z")
+            (combs.char "-")
+            (combs.char "_")
+          ]))
+        ]));
+
+  combineChars = xs: if (builtins.length xs == 0)
+    then ""
+    else let
+      first = builtins.head xs;
+      rest = builtins.tail xs;
+    in first + (combineChars rest);
 
 in
 parseElem
