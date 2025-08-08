@@ -27,14 +27,6 @@ let
       (combs.parseChar "(")
       (parseSExpr' [ ]));
 
-  parseWhiteSpace = tokens: if (builtins.length tokens) == 0
-    then { body = true; tokens = tokens; }
-    else let
-      first = builtins.head tokens;
-    in if isWhiteSpace first
-      then parseWhiteSpace (builtins.tail tokens)
-      else { body = true; tokens = tokens; };
-
   parseSExpr' = prev: tokens: let 
     first = builtins.head tokens;
     rest = builtins.tail tokens;
@@ -59,6 +51,14 @@ let
       (combs.parseChar "-")
       (combs.parseChar "*")
     ]);
+  
+  parseWhiteSpace = tokens: if (builtins.length tokens) == 0
+    then { body = true; tokens = tokens; }
+    else let
+      first = builtins.head tokens;
+    in if isWhiteSpace first
+      then parseWhiteSpace (builtins.tail tokens)
+      else { body = true; tokens = tokens; };
   
   isWhiteSpace = s: s == " " || s == "\t" || s == "\n";  
 in
