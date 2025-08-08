@@ -11,7 +11,7 @@ let
           then alternative rest tokens
           else result;
 
-  parseChar = char: tokens: if (builtins.length tokens) == 0
+  char = char: tokens: if (builtins.length tokens) == 0
     then false
     else let
       first = builtins.head tokens;
@@ -62,12 +62,22 @@ let
         parser
         res.tokens;
 
+  between = left: right: middle: 
+    bindParser
+      (thenParser left middle)
+      (val:
+        mapParser
+        (_: val)
+        right);
+
 in
 {
-  alternative = alternative;
-  thenParser = thenParser;
-  bindParser = bindParser;
-  parseChar = parseChar;
-  mapParser = mapParser;
-  many = many;
+  inherit
+    alternative
+    char
+    mapParser
+    bindParser
+    thenParser
+    many
+    between;
 }

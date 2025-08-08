@@ -2,13 +2,9 @@ let
   combs = import ./combinators.nix;
   parseNumber = import ./parse-number.nix;
 
-  parseElem = combs.bindParser
-    (combs.thenParser parseWhiteSpace parseElemContent)
-    # TODO: BETTER ABSTRACTION FOR THESE TWO A
-    (val:
-      combs.mapParser
-      (_: val)
-      parseWhiteSpace);
+  parseElem = combs.between
+    parseWhiteSpace parseWhiteSpace
+    parseElemContent;
 
   parseElemContent = combs.alternative [
     parseSExpr
@@ -16,14 +12,11 @@ let
     parseNumber
   ];
   
-  parseSExpr = (combs.bindParser
-    (combs.thenParser     
-      (combs.parseChar "(")
-      (combs.many parseElem))
-    # TODO: BETTER ABSTRACTION FOR THESE TWO B
-    (val: combs.mapParser
-      (_: { type = "s-expr"; value = val; })
-      (combs.parseChar ")")));
+  parseSExpr = combs.mapParser
+    (value: { type = "s-expr"; inherit value; })
+    (combs.between
+      (combs.char "(") (combs.char ")")
+      (combs.many parseElem));
   
   parseOp = combs.mapParser
     (x: {
@@ -31,15 +24,16 @@ let
       value = x;
     })
     (combs.alternative [
-      (combs.parseChar "+")
-      (combs.parseChar "-")
-      (combs.parseChar "*")
+      (combs.char "+")
+      (combs.char "-")
+      (combs.char "*")
     ]);
   
   parseWhiteSpace = combs.many (combs.alternative [
-    (combs.parseChar " ")
-    (combs.parseChar "\t")
-    (combs.parseChar "\n")
+    (combs.char " ")
+    (combs.char "\t")
+    (combs.char "\n")
+    (combs.char "eof")
   ]);
 
 in
