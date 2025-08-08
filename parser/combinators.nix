@@ -11,13 +11,6 @@ let
           then orParser rest tokens
           else result;
 
-  thenParser = parser: f: tokens:
-    let
-      res = parser tokens;
-    in if res == false
-      then false
-      else f res.tokens;
-
   parseChar = char: tokens: if (builtins.length tokens) == 0
     then false
     else let
@@ -48,12 +41,14 @@ let
       then false
       else f res.body res.tokens;
 
-  # bindParser = parser: f: res: tokens:
-  #   let
-  #     res = parser tokens;
-  #   in if res == false
-  #     then false
-  #     else f res.tokens;
+  # TODO: implement thenParser purely based on bindParser ? 
+  thenParser = parser: f: tokens:
+    let
+      res = parser tokens;
+    in if res == false
+      then false
+      else f res.tokens;
+
 in
 {
   orParser = orParser;
