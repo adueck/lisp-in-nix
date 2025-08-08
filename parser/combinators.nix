@@ -57,7 +57,7 @@ let
         tokens = tokens;
         body = acc;
       }
-      else many' (builtins.concatLists [ res.body ] acc) parser res.tokens;
+      else many' (builtins.concatLists [[ res.body ] acc]) parser res.tokens;
 
 in
 {

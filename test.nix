@@ -13,6 +13,7 @@ let
     { input = "(+ 1 2 3 4 5)"; output = 15; }
     { input = "(-)"; output = false; }
     { input = "(- 5)"; output = -5; }
+    { input = "(-4)"; output = -4; }
     { input = "(- 10 2 1)"; output = 7; }
     { input = "(*)"; output = 1; }
     { input = "(* 20)"; output = 20; }

@@ -14,6 +14,7 @@ let
   ];
 
   # TODO: this is not quite working with the combs.many parseElem
+  # it only works with single element S-Exprs like (+) - WHY?
   # parseSExpr = combs.bindParser
   #   (combs.mapParser
   #     (x: {
@@ -21,8 +22,8 @@ let
   #       value = x;
   #     })
   #     (combs.thenParser
-  #       (combs.parseChar "(")
-  #       (combs.many parseElem)))
+  #       (combs.parseChar "("
+  #       (combs.many parseElem))))
   #   (s: combs.mapParser (_: s) (combs.parseChar ")"));
 
   parseSExpr = combs.mapParser
