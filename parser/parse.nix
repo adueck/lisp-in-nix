@@ -4,65 +4,39 @@ let
 
   parseElem = combs.bindParser
     (combs.thenParser parseWhiteSpace parseElemContent)
-    # TODO: could make a nicer abstraction for this like 'addOnAfter'
-    (elem: combs.mapParser (_: elem) parseWhiteSpace);
+    # TODO: BETTER ABSTRACTION FOR THESE TWO A
+    (val:
+      combs.mapParser
+      (_: val)
+      parseWhiteSpace);
 
-  parseElemContent = combs.orParser [
+  parseElemContent = combs.alternative [
     parseSExpr
     parseOp
     parseNumber
   ];
-
-  # TODO: this is not quite working with the combs.many parseElem
-  # it only works with single element S-Exprs like (+) - WHY?
-  # parseSExpr = combs.bindParser
-  #   (combs.mapParser
-  #     (x: {
-  #       type = "s-expr";
-  #       value = x;
-  #     })
-  #     (combs.thenParser
-  #       (combs.parseChar "("
-  #       (combs.many parseElem))))
-  #   (s: combs.mapParser (_: s) (combs.parseChar ")"));
-
-  parseSExpr = combs.mapParser
-    (x: {
-      type = "s-expr";
-      value = x;
-    })
-    (combs.thenParser
+  
+  parseSExpr = (combs.bindParser
+    (combs.thenParser     
       (combs.parseChar "(")
-      (parseSExpr' [ ]));
-
-  parseSExpr' = prev: tokens: if (builtins.length tokens) == 0
-    then false
-    else let 
-      first = builtins.head tokens;
-      rest = builtins.tail tokens;
-    in if first == ")" then {
-      tokens = rest;
-      body = prev;
-    } else let
-      nextArg = parseElem tokens;
-    in if nextArg == false
-      then false
-      else parseSExpr'
-        (builtins.concatLists [ prev [nextArg.body] ])
-        nextArg.tokens;
-
+      (combs.many parseElem))
+    # TODO: BETTER ABSTRACTION FOR THESE TWO B
+    (val: combs.mapParser
+      (_: { type = "s-expr"; value = val; })
+      (combs.parseChar ")")));
+  
   parseOp = combs.mapParser
     (x: {
       type = "op";
       value = x;
     })
-    (combs.orParser [
+    (combs.alternative [
       (combs.parseChar "+")
       (combs.parseChar "-")
       (combs.parseChar "*")
     ]);
   
-  parseWhiteSpace = combs.many (combs.orParser [
+  parseWhiteSpace = combs.many (combs.alternative [
     (combs.parseChar " ")
     (combs.parseChar "\t")
     (combs.parseChar "\n")

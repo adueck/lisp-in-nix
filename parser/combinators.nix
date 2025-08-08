@@ -1,5 +1,5 @@
 let
-  orParser = parsers: tokens:
+  alternative = parsers: tokens:
     if (builtins.length tokens == 0) || (builtins.length parsers) == 0
       then false
       else let
@@ -8,7 +8,7 @@ let
         result = first tokens;
       in
         if result == false
-          then orParser rest tokens
+          then alternative rest tokens
           else result;
 
   parseChar = char: tokens: if (builtins.length tokens) == 0
@@ -64,7 +64,7 @@ let
 
 in
 {
-  orParser = orParser;
+  alternative = alternative;
   thenParser = thenParser;
   bindParser = bindParser;
   parseChar = parseChar;
