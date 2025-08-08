@@ -1,5 +1,7 @@
+; add the following things together
 (+
-    ; multiply
+    ; the product of 10 and 3
     (* 10 3)
-    5
-    (- 3 #| an inline comment |# 1 1))
+    5 ; the number 5
+    ; 3 minus 1 minus 1
+    (- 3 #| inline comment |# 1 1))
