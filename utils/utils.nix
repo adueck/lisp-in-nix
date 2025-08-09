@@ -7,11 +7,20 @@ let
   compose = f: g: x:
     f (g x);
 
+  getHead = list:
+    let
+      first = builtins.head list;
+      rest = builtins.tail list;
+    in {
+      inherit first rest;
+    };
+
 in
 { 
   inherit
     strToChars
-    compose;
+    compose
+    getHead;
 }
 
 # TODO: a utility for getting first and rest

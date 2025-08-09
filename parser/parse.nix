@@ -1,6 +1,7 @@
 let
   combs = import ./combinators.nix;
   parseNumber = import ./parse-number.nix;
+  utils = import ../utils/utils.nix;
 
   parseElem = combs.between
     parseWhiteSpace parseWhiteSpace
@@ -62,8 +63,7 @@ let
   combineChars = xs: if (builtins.length xs == 0)
     then ""
     else let
-      first = builtins.head xs;
-      rest = builtins.tail xs;
+      inherit (utils.getHead xs) first rest;
     in first + (combineChars rest);
 
 in

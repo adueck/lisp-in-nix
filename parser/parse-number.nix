@@ -14,8 +14,7 @@ let
   digitsToNumber = digits: if (builtins.length digits) == 0
     then 0
     else let
-      first = (builtins.head digits);
-      rest = builtins.tail digits;
+      inherit (utils.getHead digits) first rest;
       front = first * (power 10 (builtins.length rest));
     in front + digitsToNumber rest;
 

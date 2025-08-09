@@ -2,6 +2,7 @@
 # { ok = true; value = VAL; } | { ok = false; }
 
 let
+  utils = import ../utils/utils.nix;
   # utility functions for result monad
   fail = { ok = false; };
   pass = value: { ok = true; inherit value; };
@@ -26,8 +27,7 @@ let
   evalSExpr = env: s: if (builtins.length s) == 0
     then { ok = false; }
     else let
-      first = builtins.head s;
-      rest = builtins.tail s;
+      inherit (utils.getHead s) first rest;
     in if (first.type != "op")
       then fail
       else evalOp env first.value rest; 
@@ -44,10 +44,10 @@ let
   doLet = env: args: if (builtins.length args) != 2
     then fail
     else let
-      dec = builtins.head args;
-      body = builtins.head (builtins.tail args);
+      inherit (utils.getHead args) first rest;
+      body = builtins.head rest;
     in bindRes
-      (addDeclaration env dec)
+      (addDeclaration env first)
       (nenv: eval nenv body);
 
   addDeclaration = env: dec: if (dec.type != "s-expr")
@@ -71,8 +71,7 @@ let
   add = env: args: if (builtins.length args) == 0
     then pass 0
     else let
-      first = builtins.head args;
-      rest = builtins.tail args;
+      inherit (utils.getHead args) first rest;
       front = eval env first;
     in bindRes
       front
@@ -85,8 +84,7 @@ let
   subtract = env: args: if (builtins.length args) == 0
     then fail 
     else let
-      first = builtins.head args;
-      rest = builtins.tail args;
+      inherit (utils.getHead args) first rest;
       front = eval env first;
     in bindRes
       front
@@ -101,8 +99,7 @@ let
   multiply = env: args: if (builtins.length args) == 0
     then pass 1
     else let
-      first = builtins.head args;
-      rest = builtins.tail args;
+      inherit (utils.getHead args) first rest;
       front = eval env first;
     in bindRes
       front

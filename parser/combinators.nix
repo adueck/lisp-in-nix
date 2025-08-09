@@ -5,8 +5,7 @@ let
     if (builtins.length tokens == 0) || (builtins.length parsers) == 0
       then false
       else let
-        first = builtins.head parsers;
-        rest = builtins.tail parsers;
+        inherit (utils.getHead parsers) first rest;
         result = first tokens;
       in
         if result == false
@@ -16,8 +15,7 @@ let
   char = char: tokens: if (builtins.length tokens) == 0
     then false
     else let
-      first = builtins.head tokens;
-      rest = builtins.tail tokens;
+        inherit (utils.getHead tokens) first rest;
     in if first == char
       then {
         body = char;
@@ -32,8 +30,7 @@ let
   charRange = low: high: tokens: if (builtins.length tokens) == 0
     then false
     else let
-      first = builtins.head tokens;
-      rest = builtins.tail tokens;
+      inherit (utils.getHead tokens) first rest;
     in if first >= low && first <= high
       then {
         body = first;
@@ -128,12 +125,11 @@ let
         inherit tokens;
       }
     else let
-      firstP = builtins.head parsers;
-      restP = builtins.tail parsers;
-      res = firstP tokens;
+      inherit (utils.getHead parsers) first rest;
+      res = first tokens;
     in if res == false
       then false
-      else successive' (builtins.concatLists [acc [res.body]]) restP res.tokens;
+      else successive' (builtins.concatLists [acc [res.body]]) rest res.tokens;
 
 in
 {
