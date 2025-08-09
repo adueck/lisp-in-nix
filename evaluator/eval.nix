@@ -2,11 +2,13 @@
 # { ok = true; value = VAL; } | { ok = false; }
 
 let
+  # utility functions for result monad
   fail = { ok = false; };
   pass = value: { ok = true; inherit value; };
   bindRes = v: f:
     if !v.ok then v
     else f v.value;
+  # end of utility functions
 
   eval = env: ast: if ast.type == "number"
     then pass ast.value
