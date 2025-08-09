@@ -220,10 +220,10 @@ let
     "*" = multiply;
     "-" = subtract;
     "=" = equals;
-    ">" = (comp "gt");
-    "<" = (comp "lt");
-    ">=" = (comp "gte");
-    "<=" = (comp "lte");
+    ">" = comp "gt";
+    "<" = comp "lt";
+    ">=" = comp "gte";
+    "<=" = comp "lte";
     "let" = doLet;
     "not" = doNot;
     "or" = doOr;
