@@ -36,22 +36,22 @@ let
       input = "(let ((x 10) (y (+ 2 3))) (+ x y))";
       output = 15;
     }
-    # {
-    #   input = ''(let ((foo 1) (bar 10))
-    #   (let ((baz 2)) (* (+ foo baz) bar)))'';
-    #   output = 30;
-    # }
-    # {
-    #   input = ''(let ((foo 1) (bar 10))
-    #   ; shadowed identifiers overwrite previous scope
-    #   (let ((foo 2)) (+ foo bar)))'';
-    #   output = 12;
-    # }
-    # # undeclared identifier
-    # {
-    #   input = "myVar_starts-with-LOWERCASE1of3StUfF";
-    #   output = false;
-    # }
+    {
+      input = ''(let ((foo 1) (bar 10))
+      (let ((baz 2)) (* (+ foo baz) bar)))'';
+      output = 30;
+    }
+    {
+      input = ''(let ((foo 1) (bar 10))
+      ; shadowed identifiers overwrite previous scope
+      (let ((foo 2)) (+ foo bar)))'';
+      output = 12;
+    }
+    # undeclared identifier
+    {
+      input = "myVar_starts-with-LOWERCASE1of3StUfF";
+      output = false;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);

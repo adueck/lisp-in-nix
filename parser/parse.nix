@@ -28,14 +28,7 @@ let
       (combs.char "+")
       (combs.char "-")
       (combs.char "*")
-      (combs.mapParser
-        combineChars 
-        (combs.successive [
-          (combs.char "l")
-          (combs.char "e")
-          (combs.char "t")
-        ])
-      )
+      (combs.parseStr "let")
     ]);
 
   # TODO
@@ -53,8 +46,8 @@ let
     (combs.everythingBetween
       (combs.char ";") (combs.char "\n"))
     (combs.everythingBetween
-      (combs.successive [(combs.char "#") (combs.char "|")])
-      (combs.successive [(combs.char "|") (combs.char "#")]))
+      (combs.parseStr "#|")
+      (combs.parseStr "|#"))
   ];
 
   parseIdentifier = combs.mapParser

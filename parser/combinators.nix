@@ -1,4 +1,6 @@
-let 
+let
+  toChars = import ../utils/to-chars.nix;
+
   alternative = parsers: tokens:
     if (builtins.length tokens == 0) || (builtins.length parsers) == 0
       then false
@@ -22,6 +24,10 @@ let
         tokens = rest;
       }
       else false;
+
+  parseStr = str: tokens: (mapParser
+      (_: str) 
+      (successive (map char (toChars str)))) tokens;
 
   charRange = low: high: tokens: if (builtins.length tokens) == 0
     then false
@@ -128,6 +134,7 @@ in
     alternative
     char
     charRange
+    parseStr
     mapParser
     bindParser
     thenParser

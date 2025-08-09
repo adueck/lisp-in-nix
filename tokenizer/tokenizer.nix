@@ -1,5 +1,5 @@
-str: builtins.concatLists
-  [(builtins.map
-    (i: builtins.substring i 1 str)
-    (builtins.genList (i: i) (builtins.stringLength str)))
-  ["\n"]]
+let
+  toChars = import ../utils/to-chars.nix;
+  getTokens = str: builtins.concatLists [(toChars str) ["\n"]];
+in
+getTokens
