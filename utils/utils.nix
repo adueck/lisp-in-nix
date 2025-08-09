@@ -14,13 +14,20 @@ let
     in {
       inherit first rest;
     };
+  
+  combineChars = xs: if (builtins.length xs == 0)
+    then ""
+    else let
+      inherit (getHead xs) first rest;
+    in first + (combineChars rest);
 
 in
 { 
   inherit
     strToChars
     compose
-    getHead;
+    getHead
+    combineChars;
 }
 
 # TODO: a utility for getting first and rest

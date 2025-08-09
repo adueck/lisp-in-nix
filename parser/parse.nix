@@ -50,7 +50,7 @@ let
   parseIdentifier = combs.mapParser
     (value: {
       type = "identifier";
-      value = combineChars value;
+      value = utils.combineChars value;
     })
     (combs.headAndRest
       (combs.charRange "A" "z")
@@ -59,12 +59,6 @@ let
         (combs.char "-")
         (combs.char "_")
       ]));
-
-  combineChars = xs: if (builtins.length xs == 0)
-    then ""
-    else let
-      inherit (utils.getHead xs) first rest;
-    in first + (combineChars rest);
 
 in
 parseElem
