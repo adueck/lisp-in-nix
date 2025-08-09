@@ -56,10 +56,9 @@ let
       inherit (utils.getHead s) first rest;
     in if (first.type != "op")
       then fail
-      else evalOp env first.value rest; 
+      else evalOp first.value env rest; 
 
-  evalOp = env: op:
-    (builtins.getAttr op opTable) env; 
+  evalOp = op: (builtins.getAttr op opTable); 
 
   doLet = env: args: if (builtins.length args) != 2
     then fail
