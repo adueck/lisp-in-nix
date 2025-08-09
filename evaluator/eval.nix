@@ -15,10 +15,11 @@ let
   # end of utility functions
 
 #  For evaluating lambdas
-#  Save with 
+#  returns { type = "lambda"; value = {
 #    - name of arg
 #    - body of function AST
 #    - env at evaluation
+#  }};
 
 #   For setting the environment of lambdas when APPLYING something to lambda
 #   environment is defined as:
