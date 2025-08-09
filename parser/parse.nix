@@ -31,10 +31,6 @@ let
       (combs.parseStr "let")
     ]);
 
-  # TODO
-  # parseIdentifier = ...
-  #   use < > comparisons to check if chars are in range a-z
-
   parseWhiteSpace = combs.many (combs.alternative [
     (combs.char " ")
     (combs.char "\t")
@@ -55,17 +51,13 @@ let
       type = "identifier";
       value = combineChars value;
     })
-    (combs.mapParser
-      builtins.concatLists
-      (combs.successive
-        [
-          (combs.some (combs.charRange "a" "z"))
-          (combs.many (combs.alternative [
-            (combs.charRange "0" "z")
-            (combs.char "-")
-            (combs.char "_")
-          ]))
-        ]));
+    (combs.headAndRest
+      (combs.charRange "A" "z")
+      (combs.alternative [
+        (combs.charRange "0" "z")
+        (combs.char "-")
+        (combs.char "_")
+      ]));
 
   combineChars = xs: if (builtins.length xs == 0)
     then ""

@@ -1,5 +1,5 @@
 let
-  toChars = import ../utils/to-chars.nix;
-  getTokens = str: builtins.concatLists [(toChars str) ["\n"]];
+  utils = import ../utils/utils.nix;
+  getTokens = str: builtins.concatLists [(utils.strToChars str) ["\n"]];
 in
 getTokens

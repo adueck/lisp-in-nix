@@ -1,65 +1,45 @@
 let
-  parseNumber = parseNumber' [ ];
+  combs = import ./combinators.nix;
+  utils = import ../utils/utils.nix;
 
-  # TODO: implement this with combinator combs.many parseDigit
-
-  parseNumber' = prev: tokens: if (builtins.length tokens) == 0
-    then if (builtins.length prev == 0) then false
-      else {
-        tokens = [ ];
-        body = {
-          type = "number";
-          value = digitsToNumber prev;
-        };
-      }
-    else let
-      first = builtins.head tokens;
-      rest = builtins.tail tokens;
-      digit = toDigit first;
-    in if digit == 0 && (builtins.length prev == 0) then false
-      else if digit == false
-      then
-        if (builtins.length prev == 0)
-          then false
-          else {
-            tokens = tokens;
-            body = {
-              type = "number";
-              value = digitsToNumber prev;
-            };
-          }
-      else parseNumber' (builtins.concatLists [prev [digit]]) rest;
+  parseNumber = 
+    (combs.mapParser
+      (utils.compose
+        (value: { type = "number"; inherit value; })
+        (utils.compose digitsToNumber (map digitCharToInt)))
+      (combs.headAndRest
+        (combs.charRange "1" "9")
+        (combs.charRange "0" "9")));
 
   digitsToNumber = digits: if (builtins.length digits) == 0
     then 0
     else let
-      first = builtins.head digits;
+      first = (builtins.head digits);
       rest = builtins.tail digits;
       front = first * (power 10 (builtins.length rest));
     in front + digitsToNumber rest;
 
   power = base: exp: if exp == 0 then 1 else base * power base (exp - 1);
 
-  toDigit = first: if first == "1"
+  digitCharToInt = c: if c == "1"
     then 1
-    else if first == "2"
+    else if c == "2"
     then 2
-    else if first == "3"
+    else if c == "3"
     then 3
-    else if first == "4"
+    else if c == "4"
     then 4
-    else if first == "5"
+    else if c == "5"
     then 5
-    else if first == "6"
+    else if c == "6"
     then 6
-    else if first == "7"
+    else if c == "7"
     then 7
-    else if first == "8"
+    else if c == "8"
     then 8
-    else if first == "9"
+    else if c == "9"
     then 9
-    else if first == "0"
-    then 0
-    else false;
+    else 0;
+
 in
 parseNumber

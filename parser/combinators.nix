@@ -1,5 +1,5 @@
 let
-  toChars = import ../utils/to-chars.nix;
+  utils = import ../utils/utils.nix;
 
   alternative = parsers: tokens:
     if (builtins.length tokens == 0) || (builtins.length parsers) == 0
@@ -27,7 +27,7 @@ let
 
   parseStr = str: tokens: (mapParser
       (_: str) 
-      (successive (map char (toChars str)))) tokens;
+      (successive (map char (utils.strToChars str)))) tokens;
 
   charRange = low: high: tokens: if (builtins.length tokens) == 0
     then false
@@ -86,6 +86,13 @@ let
       then false
       else res;
 
+  headAndRest = headP: restP: tokens:
+    let
+      res = headP tokens;
+    in if res == false
+      then false
+      else many' [res.body] restP res.tokens;
+
   between = left: right: middle: 
     bindParser
       (thenParser left middle)
@@ -140,6 +147,7 @@ in
     thenParser
     many
     some
+    headAndRest
     between
     everythingBetween
     successive;
