@@ -10,7 +10,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 
 - LISP-style syntax
 - Primitives (follwing common LISP functionality)
-    - `+` `*` `-` `=` `>` `<` `>=` `<=` `not` `and` `or`
+    - `+` `*` `-` `=` `>` `<` `>=` `<=` `not` `and` `or` `if`
 - Data types
     - int (no floats)
     - boolean

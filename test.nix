@@ -64,6 +64,10 @@ let
     { input = "(and true)"; output = true; }
     { input = "(and true true 23 (= 1 1))"; output = true; }
     { input = "(and true true 23 (= 1 2))"; output = false; }
+    { input = "(if true 1 2)"; output = 1; }
+    { input = "(if false 1 2)"; output = 2; }
+    { input = "(if (= 2 2) (+ 10 1) 5)"; output = 11; }
+    { input = "(if (= 2 3) (+ 10 1) 5)"; output = 5; }
     { 
       input = ''
         (+ 10

@@ -46,6 +46,7 @@ let
         else if (op == "not") then pass doNot
         else if (op == "or") then pass doOr
         else if (op == "and") then pass doAnd
+        else if (op == "if") then pass doIf
         else fail)
       (f: f env args);
 
@@ -63,6 +64,18 @@ let
     else bindRes
       (eval env (builtins.head args))
       (v: pass (v == false));
+
+  doIf = env: args: if (builtins.length args) != 3
+    then fail
+    else let
+      cond = builtins.head args;
+      a = builtins.head (builtins.tail args);
+      b = builtins.head (builtins.tail (builtins.tail args));
+      res = eval env cond;
+    in if !res.ok
+      then fail
+      else 
+        eval env (if (res.value == false) then b else a);
 
   addDeclaration = env: dec: if (dec.type != "s-expr")
     then fail
