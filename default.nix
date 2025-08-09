@@ -10,7 +10,7 @@ if (ast == false)
   else if (builtins.length ast.tokens) == 0
     then let
       res = eval {} ast.body;
-    in if res == false
+    in if !res.ok
       then "ERROR: invalid expression"
-      else res
+      else res.value
     else "ERROR: invalid expression - trailing tokens"
