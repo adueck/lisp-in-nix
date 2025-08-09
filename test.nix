@@ -53,6 +53,17 @@ let
     { input = "(not false)"; output = true; }
     { input = "(not 23)"; output = false; }
     { input = "(not (= 3 3))"; output = false; }
+    { input = "(or)"; output = false; }
+    { input = "(or true)"; output = true; }
+    { input = "(or false true)"; output = true; }
+    { input = "(or false false false)"; output = false; }
+    { input = "(or 3 10)"; output = true; }
+    { input = "(or false false (= 20 21))"; output = false; }
+    { input = "(or false false (= 20 20))"; output = true; }
+    { input = "(and)"; output = true; }
+    { input = "(and true)"; output = true; }
+    { input = "(and true true 23 (= 1 1))"; output = true; }
+    { input = "(and true true 23 (= 1 2))"; output = false; }
     { 
       input = ''
         (+ 10

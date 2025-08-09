@@ -9,9 +9,8 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 ## Features
 
 - LISP-style syntax
-- Primitives
-    - `+` `*` `-` `=` `>` `<` `>=` `<=` `not`
-    - TODO: `and` `or`
+- Primitives (follwing common LISP functionality)
+    - `+` `*` `-` `=` `>` `<` `>=` `<=` `not` `and` `or`
 - Data types
     - int (no floats)
     - boolean

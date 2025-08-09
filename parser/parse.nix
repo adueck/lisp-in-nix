@@ -45,6 +45,8 @@ let
       (combs.char "<")
       (combs.parseStr "let")
       (combs.parseStr "not")
+      (combs.parseStr "or")
+      (combs.parseStr "and")
     ]);
 
   parseWhiteSpace = combs.many (combs.alternative [

@@ -44,8 +44,8 @@ let
         else if (op == "<=") then pass (comp "lte")
         else if (op == "let") then pass doLet
         else if (op == "not") then pass doNot
-        # TODO: and ond or
-        # according to https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node75.html
+        else if (op == "or") then pass doOr
+        else if (op == "and") then pass doAnd
         else fail)
       (f: f env args);
 
@@ -102,6 +102,28 @@ let
         else if (res.value != val)
         then pass false
         else equals' env val rest;
+
+  doOr = env: args: if (builtins.length args) == 0
+    then pass false
+    else let
+      inherit (utils.getHead args) first rest;
+      front = eval env first;
+    in if !front.ok
+      then fail
+      else if front.value != false
+        then pass true
+        else doOr env rest;
+
+  doAnd = env: args: if (builtins.length args) == 0
+    then pass true
+    else let
+      inherit (utils.getHead args) first rest;
+      front = eval env first;
+    in if !front.ok
+      then fail
+      else if front.value == false
+        then pass false
+        else doAnd env rest;
 
   comp = dir: env: args: if (builtins.length args) == 0
     then fail
