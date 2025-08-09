@@ -58,10 +58,8 @@ let
       then fail
       else evalOp env first.value rest; 
 
-  evalOp = env: op: args:
-    bindRes
-      (pass (builtins.getAttr op opTable)) 
-      (f: f env args);
+  evalOp = env: op:
+    (builtins.getAttr op opTable) env; 
 
   doLet = env: args: if (builtins.length args) != 2
     then fail
