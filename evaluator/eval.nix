@@ -1,6 +1,8 @@
 # OUTPUT MODAD TYPE FOR EVAL
 # { ok = true; value = VAL; } | { ok = false; }
 
+# ...could also make some kind of state monad to avoid passing env all the time
+
 let
   utils = import ../utils/utils.nix;
 
@@ -72,11 +74,9 @@ let
       cond = builtins.head args;
       a = builtins.head (builtins.tail args);
       b = builtins.head (builtins.tail (builtins.tail args));
-      res = eval env cond;
-    in if !res.ok
-      then fail
-      else 
-        eval env (if (res.value == false) then b else a);
+    in bindRes
+      (eval env cond)
+      (v: eval env (if (v == false) then b else a));
 
   addDeclaration = env: dec: if (dec.type != "s-expr")
     then fail
