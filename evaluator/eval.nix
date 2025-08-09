@@ -14,6 +14,28 @@ let
     else f v.value;
   # end of utility functions
 
+#  For evaluating lambdas
+#  Save with 
+#    - name of arg
+#    - body of function AST
+#    - env at evaluation
+
+#   For setting the environment of lambdas when APPLYING something to lambda
+#   environment is defined as:
+#   {
+#       ...env,
+#       // the saved env with the function gets saved first, overwriting the regEnv
+#       ...envSavedWithLambda,
+#       // finally the env with the function arg (x) trumps all 
+#       ...envOfArg = application
+#   }
+#   
+#   in Nix:
+#   env // lamda.env // { "${argName}" = appliedVal; }
+#     (the body of the function is evaluated with this environment)
+
+#   then check if recursion works
+
   eval = env: ast: if (ast.type == "number") || (ast.type == "boolean")
     then pass ast.value
     else if ast.type == "op"
