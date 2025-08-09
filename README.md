@@ -2,7 +2,7 @@
 
 ![Testing](https://github.com/adueck/lisp-in-nix/actions/workflows/testing.yaml/badge.svg)
 
-I wanted to learn the Nix language. I heard that that Nix was Turing-complete, so I wrote a little LISP-style calculator in it using parser combinators 🤓. This was all done in straight-up vanilla Nix with [builtins](https://nix.dev/manual/nix/2.18/language/builtins), no [lib.strings](https://ryantm.github.io/nixpkgs/functions/library/strings/).
+I wanted to learn the Nix language. I heard that that Nix was Turing-complete, so I wrote a little LISP-style calculator in it using parser combinators 🤓. This was all done in straight-up vanilla Nix with just the [builtins](https://nix.dev/manual/nix/2.18/language/builtins), no [lib.strings](https://ryantm.github.io/nixpkgs/functions/library/strings/).
 
 **Can YAML do that? I didn't think so.**
 
