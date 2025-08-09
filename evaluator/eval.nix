@@ -57,23 +57,10 @@ let
     in if (first.type != "op")
       then fail
       else evalOp env first.value rest; 
- 
+
   evalOp = env: op: args:
-    bindRes 
-      (if (op == "+") then pass add
-        else if (op == "*") then pass multiply
-        else if (op == "-") then pass subtract
-        else if (op == "=") then pass equals
-        else if (op == ">") then pass (comp "gt")
-        else if (op == "<") then pass (comp "lt")
-        else if (op == ">=") then pass (comp "gte")
-        else if (op == "<=") then pass (comp "lte")
-        else if (op == "let") then pass doLet
-        else if (op == "not") then pass doNot
-        else if (op == "or") then pass doOr
-        else if (op == "and") then pass doAnd
-        else if (op == "if") then pass doIf
-        else fail)
+    bindRes
+      (pass (builtins.getAttr op opTable)) 
       (f: f env args);
 
   doLet = env: args: if (builtins.length args) != 2
@@ -230,6 +217,22 @@ let
         else bindRes
           (multiply env rest)
           (r: pass (front.value * r)));
+
+  opTable = {
+    "+" = add;
+    "*" = multiply;
+    "-" = subtract;
+    "=" = equals;
+    ">" = (comp "gt");
+    "<" = (comp "lt");
+    ">=" = (comp "gte");
+    "<=" = (comp "lte");
+    "let" = doLet;
+    "not" = doNot;
+    "or" = doOr;
+    "and" = doAnd;
+    "if" = doIf;
+  };
 
 in
 eval
