@@ -26,6 +26,33 @@ let
     { input = "(= 5 5 5 5 (+ 2 3))"; output = true; }
     { input = "(= 5 1 5 5 (+ 2 3))"; output = false; }
     { input = "(= 5 5 5 5 (+ 1 3))"; output = false; }
+    { input = "(= true true true)"; output = true; }
+    { input = "(= false false)"; output = true; }
+    { input = "(= true true true false true)"; output = false; }
+    { input = "(> 4)"; output = true; }
+    { input = "(> 4 (+ 4 1))"; output = false; }
+    { input = "(> 4 3 2 1)"; output = true; }
+    { input = "(> 4 3 3 2 1)"; output = false; }
+    { input = "(< 4)"; output = true; }
+    { input = "(< 4 (+ 4 1))"; output = true; }
+    { input = "(< 4 5 6 7)"; output = true; }
+    { input = "(< 4 5 5 6 7)"; output = false; }
+    { input = "(>= 4)"; output = true; }
+    { input = "(>= 4 4 4 4 4)"; output = true; }
+    { input = "(>= 4 (+ 1 1))"; output = true; }
+    { input = "(>= 4 3 2 1)"; output = true; }
+    { input = "(>= 4 5 2 1)"; output = false; }
+    { input = "(>= 4 3 3 2 1)"; output = true; }
+    { input = "(<= 4)"; output = true; }
+    { input = "(<= 4 4 4 4 4)"; output = true; }
+    { input = "(<= 4 (+ 4 1))"; output = true; }
+    { input = "(<= 4 5 6 7 8 9)"; output = true; }
+    { input = "(<= 4 5 6 5 4)"; output = false; }
+    { input = "(<= 4 5 5 6 7)"; output = true; }
+    { input = "(not true)"; output = false; }
+    { input = "(not false)"; output = true; }
+    { input = "(not 23)"; output = false; }
+    { input = "(not (= 3 3))"; output = false; }
     { 
       input = ''
         (+ 10

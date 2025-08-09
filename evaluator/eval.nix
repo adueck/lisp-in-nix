@@ -38,11 +38,16 @@ let
         else if (op == "*") then pass multiply
         else if (op == "-") then pass subtract
         else if (op == "=") then pass equals
+        else if (op == ">") then pass (comp "gt")
+        else if (op == "<") then pass (comp "lt")
+        else if (op == ">=") then pass (comp "gte")
+        else if (op == "<=") then pass (comp "lte")
         else if (op == "let") then pass doLet
+        else if (op == "not") then pass doNot
+        # TODO: and ond or
+        # according to https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node75.html
         else fail)
       (f: f env args);
-
-# (builtins.trace "a" fail)
 
   doLet = env: args: if (builtins.length args) != 2
     then fail
@@ -52,6 +57,12 @@ let
     in bindRes
       (addDeclaration env first)
       (nenv: eval nenv body);
+
+  doNot = env: args: if (builtins.length args) != 1
+    then fail
+    else bindRes
+      (eval env (builtins.head args))
+      (v: pass (v == false));
 
   addDeclaration = env: dec: if (dec.type != "s-expr")
     then fail
@@ -91,6 +102,34 @@ let
         else if (res.value != val)
         then pass false
         else equals' env val rest;
+
+  comp = dir: env: args: if (builtins.length args) == 0
+    then fail
+    else let
+      inherit (utils.getHead args) first rest;
+      front = eval env first;
+    in if !front.ok
+      then fail
+      else if builtins.typeOf front.value != "int"
+      then fail
+      else comp' dir env front.value rest;
+
+  comp' = dir: env: val: args:
+    if (builtins.length args) == 0
+      then pass true
+      else let
+        inherit (utils.getHead args) first rest;
+        res = eval env first;
+      in if !res.ok
+        then fail
+        else if builtins.typeOf res.value != "int"
+        then fail
+        else if (if dir == "gt" then !(val > res.value)
+          else if dir == "lt" then !(val < res.value)
+          else if dir == "gte" then !(val >= res.value)
+          else !(val <= res.value))
+        then pass false
+        else comp' dir env res.value rest;
 
   add = env: args: if (builtins.length args) == 0
     then pass 0

@@ -38,8 +38,13 @@ let
       (combs.char "+")
       (combs.char "-")
       (combs.char "*")
+      (combs.parseStr ">=")
+      (combs.parseStr "<=")
       (combs.char "=")
+      (combs.char ">")
+      (combs.char "<")
       (combs.parseStr "let")
+      (combs.parseStr "not")
     ]);
 
   parseWhiteSpace = combs.many (combs.alternative [
