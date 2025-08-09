@@ -3,6 +3,10 @@ let
   parseNumber = import ./parse-number.nix;
   utils = import ../utils/utils.nix;
 
+  label = type: value: {
+    inherit type value;
+  };
+
   parseElem = combs.between
     parseWhiteSpace parseWhiteSpace
     parseElemContent;
@@ -10,25 +14,31 @@ let
   parseElemContent = combs.alternative [
     parseSExpr
     parseOp
+    parseBoolean
     parseIdentifier
     parseNumber
   ];
   
   parseSExpr = combs.mapParser
-    (value: { type = "s-expr"; inherit value; })
+    (label "s-expr")
     (combs.between
       (combs.char "(") (combs.char ")")
       (combs.many parseElem));
   
+  parseBoolean = combs.mapParser
+    (utils.compose (label "boolean") (s: s == "true"))
+    (combs.alternative [
+       (combs.parseStr "true")  
+       (combs.parseStr "false")  
+    ]);
+
   parseOp = combs.mapParser
-    (value: {
-      type = "op";
-      inherit value;
-    })
+    (label "op")
     (combs.alternative [
       (combs.char "+")
       (combs.char "-")
       (combs.char "*")
+      (combs.char "=")
       (combs.parseStr "let")
     ]);
 
@@ -48,10 +58,7 @@ let
   ];
 
   parseIdentifier = combs.mapParser
-    (value: {
-      type = "identifier";
-      value = utils.combineChars value;
-    })
+    (utils.compose (label "identifier") utils.combineChars)
     (combs.headAndRest
       (combs.charRange "A" "z")
       (combs.alternative [

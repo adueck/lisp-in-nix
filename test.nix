@@ -7,6 +7,8 @@ let
   tests = [
     { input = " 3 "; output = 3; }
     { input = "27345"; output = 27345; }
+    { input = " true "; output = true; }
+    { input = "false"; output = false; }
     { input = "(+ 1 2)"; output = 3; }
     { input = "(+)"; output = 0; }
     { input = "(+ 5)"; output = 5; }
@@ -15,9 +17,15 @@ let
     { input = "(- 5)"; output = -5; }
     { input = "(-4)"; output = -4; }
     { input = "(- 10 2 1)"; output = 7; }
+    { input = "(- 10 2)"; output = 8; }
     { input = "(*)"; output = 1; }
     { input = "(* 20)"; output = 20; }
     { input = "(* 5 10 2)"; output = 100; }
+    { input = "(= 3)"; output = true; }
+    { input = "(= 3 (+ 1 2))"; output = true; }
+    { input = "(= 5 5 5 5 (+ 2 3))"; output = true; }
+    { input = "(= 5 1 5 5 (+ 2 3))"; output = false; }
+    { input = "(= 5 5 5 5 (+ 1 3))"; output = false; }
     { 
       input = ''
         (+ 10
@@ -71,6 +79,6 @@ let
     testResults;
 in
 if report == ""
-  then "ALL " + (builtins.toString (builtins.length tests)) + " TESTS PASSED!"
+  then "✅ ALL " + (builtins.toString (builtins.length tests)) + " TESTS PASSED!"
   else abort ("FAILED ON " + report)
 

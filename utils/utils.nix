@@ -21,13 +21,22 @@ let
       inherit (getHead xs) first rest;
     in first + (combineChars rest);
 
+  every = f: xs: if (builtins.length xs == 0)
+    then true
+    else let
+      inherit (getHead xs) first rest;
+    in if (f first)
+      then every rest
+      else false;
+
 in
 { 
   inherit
     strToChars
     compose
     getHead
-    combineChars;
+    combineChars
+    every;
 }
 
 # TODO: a utility for getting first and rest
