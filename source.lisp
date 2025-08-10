@@ -1,4 +1,4 @@
-(lambda x (+ x 1))
+((lambda x (+ x 1)) 10)
 ; basic LISP syntax for calculations
 ; (let
 ;   ; declare variables

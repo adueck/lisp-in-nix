@@ -54,9 +54,19 @@ let
     then fail
     else let
       inherit (utils.getHead s) first rest;
-    in if (first.type != "op")
-      then fail
-      else evalOp first.value env rest; 
+    in if (first.type == "s-expr")
+      then evalSExprWLambda env first rest
+      else if (first.type == "op")
+      then evalOp first.value env rest
+      else fail;
+
+  evalSExprWLambda = env: lambda: args: if (builtins.length args) != 1
+    then fail
+    else bindRes
+      (eval env lambda)
+      (lv: if lv.type != "lambda"
+        then fail
+        else evalLambda env lv (builtins.head args));
 
   evalOp = op: (builtins.getAttr op opTable); 
 
@@ -206,19 +216,30 @@ let
           (multiply env rest)
           (r: pass (fr * r)));
 
+
   doLambda = env: args: if (builtins.length args) != 2
     then fail
     else let
       inherit (utils.getHead args) first rest;
+      param = first;
       body = utils.getHead rest;
-    in if first.type != "identifier"
+    in if param.type != "identifier"
       then fail
       else pass {
         type = "lambda";
-        param = first.value;
+        param = param.value;
         inherit body env;
       };
 
+  evalLambda = env: lambda: arg:
+      bindRes
+        (eval env arg)
+        (av: let
+          newEnv = env // lambda.env // { "${lambda.param}" = av; };
+          # FOR SOME REASON WE'RE NOT GETTING THE CORRECT LAMBDA BODY PASSED HERE!!!
+        in pass (builtins.trace lambda.body 100));
+         # eval newEnv lambda.body
+        
   opTable = {
     "+" = add;
     "*" = multiply;
