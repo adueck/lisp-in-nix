@@ -16,7 +16,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
     - int (no floats)
     - boolean
 - Identifiers / variables with `let`
-- Lambdas
+- Lambdas (single parameter)
 
 ## Requirements
 
