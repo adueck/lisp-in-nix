@@ -206,6 +206,19 @@ let
           (multiply env rest)
           (r: pass (fr * r)));
 
+  doLambda = env: args: if (builtins.length args) != 2
+    then fail
+    else let
+      inherit (utils.getHead args) first rest;
+      body = utils.getHead rest;
+    in if first.type != "identifier"
+      then fail
+      else pass {
+        type = "lambda";
+        param = first.value;
+        inherit body env;
+      };
+
   opTable = {
     "+" = add;
     "*" = multiply;
@@ -220,6 +233,7 @@ let
     "or" = doOr;
     "and" = doAnd;
     "if" = doIf;
+    "lambda" = doLambda;
   };
 
 in
