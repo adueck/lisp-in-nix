@@ -11,7 +11,7 @@ I also wanted to go way overboard and practice some FP so of course I used:
   1. an Either monad for handling errors in evaluation
     - *because I can't be bothered to manually error handle each result.*
   2. a State monad for keeping track of the environment
-    - *because why manually pass the environment around to the different eval functions like a caveman? After all, we're writing an interpreter in a fully-functional configuration DSL inspired by Haskell. Let's go all out on this. This ended up becoming wayyy worse for handling the environment for lambda applications, but oh well.*
+    - *because why manually pass the environment around to the different eval functions like a caveman? After all, we're writing an interpreter in a fully-functional configuration DSL inspired by Haskell. Let's go all out on this. This ended up becoming wayyy worse for handling the environment for lambda applications, but oh well, that's the price you pay for FP glory.*
 
 This was all done in straight-up vanilla Nix with just the [builtins](https://nix.dev/manual/nix/2.18/language/builtins). No [lib.strings](https://ryantm.github.io/nixpkgs/functions/library/strings/) or **lib.** anything here.
 
@@ -24,7 +24,7 @@ Should YAML, or any config DSL do this? Probably also no. Should *I* have done t
 - LISP-style syntax
 - Primitives (follwing common LISP functionality)
     - `+` `*` `-` `=` `>` `<` `>=` `<=` `not` `and` `or` `if`
-    - *TODO* `number?` `bool?` `lambda?`
+    - **TODO:** `number?` `bool?` `lambda?`
 - Data types
     - int (no floats)
     - boolean
