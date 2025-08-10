@@ -116,6 +116,64 @@ let
   (myf 2))'';
       output = 20;
     }
+    {
+      input = ''
+(let
+  (
+    (x 2)
+    (y 3)
+    (f (lambda z (+ x y z)))
+  )
+(f 5))'';
+      output = 10;
+    }
+    {
+      input = ''
+(let
+  (
+    (a 10)
+    (b 2)
+    (getF (lambda y
+      (lambda x (+ x b 1))))
+    (b 100)
+  )
+  ((getF true) 3)
+)'';
+      output = 6; 
+    }
+    {
+      input = ''
+(let
+  (
+    (a 10)
+    (getF (lambda y
+      (lambda x (+ x b 1))))
+  )
+  (let
+    (
+      (b 500) 
+    )
+    ((getF 1) 2))) 
+  '';
+      output = 503;
+    }
+    {
+      input = ''
+(let
+  (
+    (a 10)
+    (getF (lambda y
+      (lambda x (+ x y b 1))))
+  )
+  (let
+    (
+      (b 500)
+      (y 1000)
+    )
+    ((getF 21) 2))) 
+  '';
+      output = 524;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);

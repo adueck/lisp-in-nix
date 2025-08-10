@@ -1,9 +1,14 @@
+
 (let
   (
-   (abC (+ 10 1))
-   (myf (lambda x (* x 10)))
+    (a 10)
+    (b 2)
+    (getF (lambda y
+      (lambda x (+ x b 1))))
+    (b 100)
   )
-  (myf 2))
+  ((getF true) 3))
+
 ; basic LISP syntax for calculations
 ; (let
 ;   ; declare variables
