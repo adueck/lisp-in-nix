@@ -1,18 +1,14 @@
-
+; calculate the 7th value of the fibobonaci sequence
 (let
   (
-    (a 10)
-    (b 2)
-    (getF (lambda y
-      (lambda x (+ x b 1))))
-    (b 100)
+    ; functions are defined as lambdas bound to identifiers
+    (fibb (lambda n    
+      (if (< n 3)
+      n
+      (+ 
+        (fibb (- n 2)) #| recursion! |# (fibb (- n 1)))))
+    )
   )
-  ((getF true) 3))
-
-; basic LISP syntax for calculations
-; (let
-;   ; declare variables
-;   ((x 1) (y 2))
-;   (* 
-;     (+ x y #| inline comments too |# )
-;     10))
+  ; call the function with 7 to get the 7th value
+  (fibb 7)
+)

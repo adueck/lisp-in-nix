@@ -27,20 +27,27 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 Edit `source.lisp`, to contain something one expression you want to evaluate, like:
 
 ```lisp
-; basic LISP syntax for calculations
+; calculate the 7th value of the fibobonaci sequence
 (let
-  ; declare variables
-  ((x 1) (y 2))
-  (* 
-    (+ x y #| inline comments too |# )
-    10))
+  (
+    ; functions are defined as lambdas bound to identifiers
+    (fibb (lambda n    
+      (if (< n 3)
+      n
+      (+ 
+        (fibb (- n 2)) #| recursion! |# (fibb (- n 1)))))
+    )
+  )
+  ; call the function with 7 to get the 7th value
+  (fibb 7)
+)
 ```
 
 Run `nix-instantiate --eval` to evaluate the source.
 
 ```bash
 $ nix-instantiate --eval
-30
+21
 ```
 
 ## Testing
