@@ -24,7 +24,7 @@ I wanted to learn the Nix language. I heard that that Nix was Turing-complete, s
 
 ## Runing the Evaluator
 
-Edit `source.lisp`, to contain something one expression you want to evaluate, like:
+Edit `source.lisp`, to contain soething one expression you want to evaluate, like:
 
 ```lisp
 ; calculate the 7th value of the fibobonaci sequence
