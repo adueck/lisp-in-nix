@@ -14,8 +14,6 @@ let
     else f v.value;
   # end of utility functions
 
-  # TODO: check if recursion works with lambdas
-
   eval = env: ast: if (ast.type == "number") || (ast.type == "boolean")
     then pass ast.value
     else if ast.type == "op"
