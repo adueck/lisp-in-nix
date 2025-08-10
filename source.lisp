@@ -1,4 +1,6 @@
-((lambda x (+ x 1)) 10)
+(let
+  ((myF (lambda x (+ x 1))))
+  (myF 10))
 ; basic LISP syntax for calculations
 ; (let
 ;   ; declare variables

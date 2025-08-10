@@ -60,6 +60,10 @@ let
       then evalOp first.value env rest
       else fail;
 
+  # TODO: not working when the lambda is called from a variable like this
+  # (let
+  #   ((myF (lambda x (+ x 1))))
+  #   (myF 10))
   evalSExprWLambda = env: lambda: args: if (builtins.length args) != 1
     then fail
     else bindRes
@@ -222,7 +226,7 @@ let
     else let
       inherit (utils.getHead args) first rest;
       param = first;
-      body = utils.getHead rest;
+      body = builtins.head rest;
     in if param.type != "identifier"
       then fail
       else pass {
@@ -232,13 +236,11 @@ let
       };
 
   evalLambda = env: lambda: arg:
-      bindRes
-        (eval env arg)
-        (av: let
-          newEnv = env // lambda.env // { "${lambda.param}" = av; };
-          # FOR SOME REASON WE'RE NOT GETTING THE CORRECT LAMBDA BODY PASSED HERE!!!
-        in pass (builtins.trace lambda.body 100));
-         # eval newEnv lambda.body
+    bindRes
+      (eval env arg)
+      (av: eval
+        (env // lambda.env // { "${lambda.param}" = av; })
+        lambda.body);
         
   opTable = {
     "+" = add;
