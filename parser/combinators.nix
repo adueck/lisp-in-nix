@@ -1,6 +1,37 @@
 let
   utils = import ../utils/utils.nix;
 
+  # OBLIGATORY MONAD DEFINITON
+  #
+  # >>=
+  bindParser = parser: f: tokens: let
+      res = parser tokens;
+    in if res == false
+      then false
+      else f res.body res.tokens;
+
+  # >>
+  thenParser = parser: f: tokens: let
+      res = parser tokens;
+    in if res == false
+      then false
+      else f res.tokens;
+
+  # fmap
+  mapParser = f: p: tokens:
+    let
+      res = p tokens;
+    in if res == false
+      then false
+    else {
+      tokens = res.tokens;
+      body = f res.body;
+    };
+
+  # return
+  returnParser = result: tokens: result;
+
+  # PARSER COMBINATORS
   alternative = parsers: tokens:
     if (builtins.length tokens == 0) || (builtins.length parsers) == 0
       then false
@@ -37,28 +68,6 @@ let
         tokens = rest;
       }
       else false;
-
-  mapParser = f: p: tokens:
-    let
-      res = p tokens;
-    in if res == false
-      then false
-    else {
-      tokens = res.tokens;
-      body = f res.body;
-    };
-
-  bindParser = parser: f: tokens: let
-      res = parser tokens;
-    in if res == false
-      then false
-      else f res.body res.tokens;
-
-  thenParser = parser: f: tokens: let
-      res = parser tokens;
-    in if res == false
-      then false
-      else f res.tokens;
 
   many = parser: tokens:
     many' [ ] parser tokens;

@@ -6,7 +6,10 @@
       (if (< n 3)
       n
       (+ 
-        (fibb (- n 2)) #| recursion! |# (fibb (- n 1)))))
+        ; problem where this gets evaluated and saved as n
+        (fibb (- n 2))
+        ; and then it's in the environment for this!
+        (fibb (- n 1)))))
     )
   )
   ; call the function with 7 to get the 7th value

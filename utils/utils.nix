@@ -14,6 +14,11 @@ let
     in {
       inherit first rest;
     };
+
+  take2 = list:
+    let 
+      inherit (getHead list) first rest;
+    in [first (builtins.head rest)];
   
   combineChars = xs: if (builtins.length xs == 0)
     then ""
@@ -36,7 +41,8 @@ in
     compose
     getHead
     combineChars
-    every;
+    every
+    take2;
 }
 
 # TODO: a utility for getting first and rest
