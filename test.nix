@@ -102,6 +102,20 @@ let
       input = "myVar_starts-with-LOWERCASE1of3StUfF";
       output = false;
     }
+    {
+      input = "((lambda x (+ x 1)) 3)";
+      output = 4;
+    }
+    {
+      input = ''
+(let
+  (
+   (abC (+ 10 1))
+   (myf (lambda x (* x 10)))
+  )
+  (myf 2))'';
+      output = 20;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);

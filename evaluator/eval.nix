@@ -14,28 +14,7 @@ let
     else f v.value;
   # end of utility functions
 
-#  For evaluating lambdas
-#  returns { type = "lambda"; value = {
-#    - name of arg
-#    - body of function AST
-#    - env at evaluation
-#  }};
-
-#   For setting the environment of lambdas when APPLYING something to lambda
-#   environment is defined as:
-#   {
-#       ...env,
-#       // the saved env with the function gets saved first, overwriting the regEnv
-#       ...envSavedWithLambda,
-#       // finally the env with the function arg (x) trumps all 
-#       ...envOfArg = application
-#   }
-#   
-#   in Nix:
-#   env // lamda.env // { "${argName}" = appliedVal; }
-#     (the body of the function is evaluated with this environment)
-
-#   then check if recursion works
+  # TODO: check if recursion works with lambdas
 
   eval = env: ast: if (ast.type == "number") || (ast.type == "boolean")
     then pass ast.value
@@ -54,16 +33,10 @@ let
     then fail
     else let
       inherit (utils.getHead s) first rest;
-    in if (first.type == "s-expr")
-      then evalSExprWLambda env first rest
-      else if (first.type == "op")
+    in if (first.type == "op")   
       then evalOp first.value env rest
-      else fail;
+      else evalSExprWLambda env first rest;
 
-  # TODO: not working when the lambda is called from a variable like this
-  # (let
-  #   ((myF (lambda x (+ x 1))))
-  #   (myF 10))
   evalSExprWLambda = env: lambda: args: if (builtins.length args) != 1
     then fail
     else bindRes

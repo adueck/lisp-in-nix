@@ -71,7 +71,8 @@ let
     (combs.headAndRest
       (combs.charRange "A" "z")
       (combs.alternative [
-        (combs.charRange "0" "z")
+        (combs.charRange "0" "9")
+        (combs.charRange "A" "z")
         (combs.char "-")
         (combs.char "_")
       ]));
