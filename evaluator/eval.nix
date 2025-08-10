@@ -107,80 +107,73 @@ let
     then fail
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
-    in if !front.ok
-      then fail
-      else equals' env front.value rest;
+    in bindRes
+      (eval env first)
+      (v: equals' env v rest);
 
   equals' = env: val: args:
     if (builtins.length args) == 0
       then pass true
       else let
         inherit (utils.getHead args) first rest;
-        res = eval env first;
-      in if !res.ok
-        then fail
-        else if (res.value != val)
-        then pass false
-        else equals' env val rest;
+      in bindRes
+        (eval env first)
+        (v: if (v != val)
+          then pass false
+          else equals' env val rest);
 
   doOr = env: args: if (builtins.length args) == 0
     then pass false
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
-    in if !front.ok
-      then fail
-      else if front.value != false
+    in bindRes
+      (eval env first)
+      (v: if v != false
         then pass true
-        else doOr env rest;
+        else doOr env rest);
 
   doAnd = env: args: if (builtins.length args) == 0
     then pass true
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
-    in if !front.ok
-      then fail
-      else if front.value == false
+    in bindRes
+      (eval env first)
+      (v: if v == false
         then pass false
-        else doAnd env rest;
+        else doAnd env rest);
 
   comp = dir: env: args: if (builtins.length args) == 0
     then fail
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
-    in if !front.ok
-      then fail
-      else if builtins.typeOf front.value != "int"
-      then fail
-      else comp' dir env front.value rest;
+    in bindRes
+      (eval env first)
+      (v: if builtins.typeOf v != "int"
+        then fail
+        else comp' dir env v rest);
 
   comp' = dir: env: val: args:
     if (builtins.length args) == 0
       then pass true
       else let
         inherit (utils.getHead args) first rest;
-        res = eval env first;
-      in if !res.ok
-        then fail
-        else if builtins.typeOf res.value != "int"
-        then fail
-        else if (if dir == "gt" then !(val > res.value)
-          else if dir == "lt" then !(val < res.value)
-          else if dir == "gte" then !(val >= res.value)
-          else !(val <= res.value))
-        then pass false
-        else comp' dir env res.value rest;
+      in bindRes
+        (eval env first)
+        (v: if builtins.typeOf v != "int"
+          then fail
+          else if (if dir == "gt" then !(val > v)
+            else if dir == "lt" then !(val < v)
+            else if dir == "gte" then !(val >= v)
+            else !(val <= v))
+          then pass false
+          else comp' dir env v rest);
 
   add = env: args: if (builtins.length args) == 0
     then pass 0
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
     in bindRes
-      front
+      (eval env first)
       (fr: if builtins.typeOf fr != "int"
         then fail
         else bindRes
@@ -191,9 +184,8 @@ let
     then fail 
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
     in bindRes
-      front
+      (eval env first)
       (fr: if builtins.typeOf fr != "int"
         then fail
         else if (builtins.length rest == 0)
@@ -206,14 +198,13 @@ let
     then pass 1
     else let
       inherit (utils.getHead args) first rest;
-      front = eval env first;
     in bindRes
-      front
+      (eval env first)
       (fr: if builtins.typeOf fr != "int"
         then fail
         else bindRes
           (multiply env rest)
-          (r: pass (front.value * r)));
+          (r: pass (fr * r)));
 
   opTable = {
     "+" = add;
