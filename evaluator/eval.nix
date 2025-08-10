@@ -1,5 +1,5 @@
 # OUTPUT MODAD TYPE FOR EVAL
-# { ok = true; value = VAL; } | { ok = false; }
+# { ok = true; value = VAL; } | { ok = false; error = STRING; }
 
 # ...could also make some kind of state monad to avoid passing env all the time
 
@@ -7,7 +7,7 @@ let
   utils = import ../utils/utils.nix;
 
   # utility functions for result monad
-  fail = { ok = false; };
+  fail = msg: { ok = false; error = msg; };
   pass = value: { ok = true; inherit value; };
   bindRes = v: f:
     if !v.ok then v
@@ -27,10 +27,10 @@ let
   lookup = env: id:
     if builtins.hasAttr id env
       then pass (builtins.getAttr id env)
-      else fail;
+      else fail "variable ${id} not found";
 
   evalSExpr = env: s: if (builtins.length s) == 0
-    then fail
+    then fail "S-Expr must have at least one element"
     else let
       inherit (utils.getHead s) first rest;
     in if (first.type == "op")   
@@ -38,17 +38,17 @@ let
       else evalSExprWLambda env first rest;
 
   evalSExprWLambda = env: lambda: args: if (builtins.length args) != 1
-    then fail
+    then fail "function can only be applied to one argument"
     else bindRes
       (eval env lambda)
       (lv: if lv.type != "lambda"
-        then fail
+        then fail "not a function at the beginning of a S-Expr"
         else evalLambda env lv (builtins.head args));
 
   evalOp = op: (builtins.getAttr op opTable); 
 
   doLet = env: args: if (builtins.length args) != 2
-    then fail
+    then fail "let expression must have two arguments"
     else let
       inherit (utils.getHead args) first rest;
       body = builtins.head rest;
@@ -57,13 +57,13 @@ let
       (nenv: eval nenv body);
 
   doNot = env: args: if (builtins.length args) != 1
-    then fail
+    then fail "not expression must have one argument"
     else bindRes
       (eval env (builtins.head args))
       (v: pass (v == false));
 
   doIf = env: args: if (builtins.length args) != 3
-    then fail
+    then fail "if expression must have three args"
     else let
       cond = builtins.head args;
       a = builtins.head (builtins.tail args);
@@ -73,25 +73,25 @@ let
       (v: eval env (if (v == false) then b else a));
 
   addDeclaration = env: dec: if (dec.type != "s-expr")
-    then fail
+    then fail "invalid declaration section"
     else builtins.foldl'
       (acc: curr: bindRes acc (a: addOneDec a curr))
       (pass env)
       dec.value; 
 
   addOneDec = env: dec: if (dec.type != "s-expr") || (builtins.length dec.value) != 2
-    then fail
+    then fail "invalid declaration"
     else let
       id = builtins.head dec.value;
       assigned = builtins.head (builtins.tail dec.value);
     in if id.type != "identifier"
-      then fail
+      then fail "first element in declaration must be a variable"
       else bindRes
         (eval env assigned)
         (v: pass (env // { "${id.value}" = v; }));
 
   equals = env: args: if (builtins.length args) == 0
-    then fail
+    then fail "= requires argument(s)"
     else let
       inherit (utils.getHead args) first rest;
     in bindRes
@@ -130,13 +130,13 @@ let
         else doAnd env rest);
 
   comp = dir: env: args: if (builtins.length args) == 0
-    then fail
+    then fail "comparison requires arg(s)"
     else let
       inherit (utils.getHead args) first rest;
     in bindRes
       (eval env first)
       (v: if builtins.typeOf v != "int"
-        then fail
+        then fail "comparison only works on ints"
         else comp' dir env v rest);
 
   comp' = dir: env: val: args:
@@ -147,7 +147,7 @@ let
       in bindRes
         (eval env first)
         (v: if builtins.typeOf v != "int"
-          then fail
+          then fail "comparison only works on ints"
           else if (if dir == "gt" then !(val > v)
             else if dir == "lt" then !(val < v)
             else if dir == "gte" then !(val >= v)
@@ -162,19 +162,19 @@ let
     in bindRes
       (eval env first)
       (fr: if builtins.typeOf fr != "int"
-        then fail
+        then fail "+ only works on ints"
         else bindRes
           (add env rest)
           (r: pass (fr + r)));
   
   subtract = env: args: if (builtins.length args) == 0
-    then fail 
+    then fail "- requires arg(s)" 
     else let
       inherit (utils.getHead args) first rest;
     in bindRes
       (eval env first)
       (fr: if builtins.typeOf fr != "int"
-        then fail
+        then fail "- only works on ints"
         else if (builtins.length rest == 0)
         then pass (-fr)
         else bindRes
@@ -188,20 +188,20 @@ let
     in bindRes
       (eval env first)
       (fr: if builtins.typeOf fr != "int"
-        then fail
+        then fail "* only works on ints"
         else bindRes
           (multiply env rest)
           (r: pass (fr * r)));
 
 
   doLambda = env: args: if (builtins.length args) != 2
-    then fail
+    then fail "lambda expression requires two args"
     else let
       inherit (utils.getHead args) first rest;
       param = first;
       body = builtins.head rest;
     in if param.type != "identifier"
-      then fail
+      then fail "lambda parameter must be a single identifier"
       else pass {
         type = "lambda";
         param = param.value;

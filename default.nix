@@ -11,6 +11,6 @@ if (ast == false)
     then let
       res = eval {} ast.body;
     in if !res.ok
-      then "ERROR: invalid expression"
+      then "ERROR: ${res.error}"
       else res.value
     else "ERROR: invalid expression - trailing tokens"
