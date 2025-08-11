@@ -23,12 +23,11 @@ Should YAML, or any config DSL do this? Probably also no. Should *I* have done t
 
 - LISP-style syntax
 - Primitives (follwing common LISP functionality)
-    - `+` `*` `-` `=` `>` `<` `>=` `<=` `not` `and` `or` `if`
-    - **TODO:** `number?` `bool?` `lambda?`
+    - `+` `*` `-` `=` `>` `<` `>=` `<=` `not` `and` `or` `if` `number?` `bool?` `lambda?`
 - Data types
     - int (no floats)
     - boolean
-- Identifiers / variables with `let`
+- Variables with `let`
 - Lambdas (single parameter)
 
 ### 🚧 Roadmap (that will probably never happen)

@@ -150,6 +150,12 @@ let
     "if" = doIf;
     "let" = doLet;
     "lambda" = doLambda;
+    "lambda?" = typePred
+      "lambda" (v: builtins.typeOf v == "set" && builtins.hasAttr "type" v && v.type == "lambda");
+    "number?" = typePred
+      "number" (v: builtins.typeOf v == "int");
+    "bool?" = typePred
+      "bool" (v: builtins.typeOf v == "bool");
   };
  
   # [Exp] -> State
@@ -327,6 +333,14 @@ let
           param = param.value;
           inherit body env;
         });
+
+  # String -> (VAL -> Bool) -> [Exp] -> State
+
+  typePred = label: pred: args: if (builtins.length args != 1)
+    then fail "type predicate ${label}? requires one argument"
+    else bind
+      (eval (builtins.head args))
+      (x: pass (pred x));
 
   # absolutely horrific workaround to keep the environment passed
   # through the monad in check while evaluating lambdas (otherwise there

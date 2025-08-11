@@ -48,6 +48,9 @@ let
       (combs.parseStr "or")
       (combs.parseStr "and")
       (combs.parseStr "if")
+      (combs.parseStr "lambda?")
+      (combs.parseStr "bool?")
+      (combs.parseStr "number?")
       (combs.parseStr "lambda")
     ]);
 

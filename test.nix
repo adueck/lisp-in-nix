@@ -179,24 +179,81 @@ let
   '';
       output = 524;
     }
-    # {
-    #   input = ''
-# ; calculate the 7th value of the fibobonaci sequence
-# (let
-  # (
-    # ; functions are defined as lambdas bound to identifiers
-    # (fibb (lambda n    
-    #   (if (< n 3)
-    #   n
-    #   (+ 
-    #     (fibb (- n 2)) #| recursion! |# (fibb (- n 1)))))
-    # )
-  # )
-  # ; call the function with 7 to get the 7th value
-  # (fibb 7)
-# )'';
-    #   output = 21;
-    # }
+    {
+      input = ''
+; calculate the 7th value of the fibobonaci sequence
+(let
+  (
+    ; functions are defined as lambdas bound to identifiers
+    (fibb (lambda n    
+      (if (< n 3)
+      n
+      (+ 
+        (fibb (- n 2)) #| recursion! |# (fibb (- n 1)))))
+    )
+  )
+  ; call the function with 7 to get the 7th value
+  (fibb 7)
+)'';
+      output = 21;
+    }
+    {
+      input = "(bool? true)";
+      output = true;
+    }
+    {
+      input = "(bool? false)";
+      output = true;
+    }
+    {
+      input = "(bool? (= 2 2))";
+      output = true;
+    }
+    {
+      input = "(bool? 234)";
+      output = false;
+    }
+    {
+      input = "(bool? (lambda x (+ x 1)))";
+      output = false;
+    }
+    {
+      input = "(number? 101)";
+      output = true;
+    }
+    {
+      input = "(number? (+ 1 1))";
+      output = true;
+    }
+    {
+      input = "(number? true)";
+      output = false;
+    }
+    {
+      input = "(number? (lambda x (+ x 1)))";
+      output = false;
+    }
+    {
+      input = "(lambda? (lambda x (+ x 1)))";
+      output = true;
+    }
+    {
+      input = "(lambda? true)";
+      output = false;
+    }
+    {
+      input = "(lambda? 23)";
+      output = false;
+    }
+    {
+      input = ''(lambda?
+        (let
+          ((myF (lambda y (* y y))))
+          myF
+        )
+      )'';
+      output = true;
+    }
   ];
   runTest = test: let
     ast = parse (getTokens test.input);
