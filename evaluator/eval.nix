@@ -38,11 +38,7 @@ let
   # >>
   # State -> State -> State
   apply = m0: m1:
-    env: let
-      m2 = m0 env;
-    in if (m2.result.ok)
-      then m1 m2.env
-      else m2;
+    bind m0 (_: m1);
 
   # applyMap takes a function that generates a monad from each member of
   # a NON-EMPTY list and applies the resulting monads in order
